@@ -31,8 +31,6 @@ class GithubSource extends DataSource
 		if(!$items)
 		{
 			$items = json_decode($this->Http->get('https://api.github.com/users/'.$this->config['username'].'/events',$this->config),true);
-			
-			pr($items);
 
 			$array=array();
 			foreach ($items as $item) {
