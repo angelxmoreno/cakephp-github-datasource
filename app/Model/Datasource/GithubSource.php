@@ -22,20 +22,23 @@ class GithubSource extends DataSource
 
 	public function read(Model $model, $queryData = array())
 	{
-		if(!empty($queryData['conditions']))
-		{
-			$this->config =	array_merge($this->config, $queryData['conditions']);
-		}
-
-		$items = Cache::read('github_activity', 'shortterm');
+	
+		if(isset($queryData['limit'])?$this->config['limit']=$queryData['limit']:null);
+	
+		$items = Cache::read('github_activity');
 		if(!$items)
 		{
 			$items = json_decode($this->Http->get('https://api.github.com/users/'.$this->config['username'].'/events',$this->config),true);
-			
-			pr($items);
 
+			$i=0;
 			$array=array();
-			foreach ($items as $item) {
+			foreach ($items as $item) 
+			{
+				if($i==$this->config['limit'])
+				{
+					break;
+				}
+
 				switch($item['type']) {
 					case 'WatchEvent':
 						$array[]=array(
@@ -78,8 +81,9 @@ class GithubSource extends DataSource
 						);
 						break;
 				}
+				$i++;
 			}
-			Cache::write('github_activity', $array, 'shortterm');
+			Cache::write('github_activity', $array);
 		}
 		return($array);
 	}
