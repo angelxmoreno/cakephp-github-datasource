@@ -11,7 +11,7 @@ After you have the model and the datasource files in the correct place, you need
 public $github= array(
   'datasource' => 'GithubSource',
   'username' => 'synbyte',
-  'count' => '5' 
+  'limit' => '5' 
 );
 ```
 
